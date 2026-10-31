@@ -13,13 +13,15 @@ export type CouponListItem = {
 export function CouponList({
   items,
   onToggle,
+  title = 'Coupons',
 }: {
   items: CouponListItem[];
   onToggle: (code: string) => void;
+  title?: string;
 }) {
   return (
     <View className={couponStyles.list}>
-      <AppText variant="title">Coupons</AppText>
+      <AppText variant="title">{title}</AppText>
       {items.map((item) => (
         <CouponTicketCard
           key={item.rule.code}

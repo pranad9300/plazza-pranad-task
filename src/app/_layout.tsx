@@ -7,6 +7,10 @@ export default function RootLayout() {
     <AppProviders>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" />
+        <Stack.Screen
+          name="coupons"
+          options={{ headerShown: true, title: 'All coupons', headerBackTitle: 'Cart' }}
+        />
       </Stack>
     </AppProviders>
   );
