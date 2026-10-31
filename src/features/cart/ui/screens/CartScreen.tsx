@@ -1,5 +1,6 @@
 import { ScrollView, View } from 'react-native';
-import { AppText, EmptyState, Screen } from '@/common/components';
+import { AppText, Button, EmptyState, Screen } from '@/common/components';
+import { CouponList } from '@/features/coupons';
 import { BillBreakdown } from '../components/BillBreakdown';
 import { CartLineRow } from '../components/CartLineRow';
 import { cartStyles } from '../styles/cart.styles';
@@ -30,6 +31,17 @@ export function CartScreen() {
         )}
 
         <BillBreakdown bill={cart.bill} />
+
+        <CouponList items={cart.couponItems} onToggle={cart.toggleCoupon} />
+
+        <View className="mt-lg mb-xl">
+          <Button
+            label="Place order"
+            onPress={() => {
+              void cart.placeOrder();
+            }}
+          />
+        </View>
       </ScrollView>
     </Screen>
   );

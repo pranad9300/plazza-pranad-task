@@ -9,6 +9,10 @@ export const colors = {
   success: '#1B7F4E',
   danger: '#C62828',
   warning: '#F5A524',
+  couponFlat: '#F5D76E',
+  couponPercent: '#9AD0F5',
+  couponShip: '#C5B3F5',
+  couponFirst: '#F7B267',
 } as const;
 
 export const spacing = {

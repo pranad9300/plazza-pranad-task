@@ -8,12 +8,12 @@ const VERSION = 1;
 export class UsedCouponsRepositoryImpl implements UsedCouponsRepository {
   constructor(private readonly storage: KeyValueStorage) {}
 
-  async getUsed(): Promise<string[]> {
+  getUsed(): string[] {
     return readVersioned(this.storage.getString(STORAGE_KEY), VERSION, [] as string[]);
   }
 
-  async markUsed(code: string): Promise<void> {
-    const used = await this.getUsed();
+  markUsed(code: string): void {
+    const used = this.getUsed();
     if (used.includes(code)) {
       return;
     }

@@ -5,3 +5,5 @@ export type { CouponRule } from './domain/rules/CouponRule';
 export type { UsedCouponsRepository } from './domain/repositories/UsedCouponsRepository';
 export { listCouponRules, getCouponRule } from './domain/rules/registry';
 export { evaluateCoupon } from './domain/evaluateCoupon';
+export { CouponList } from './ui/components/CouponList';
+export type { CouponListItem } from './ui/components/CouponList';
