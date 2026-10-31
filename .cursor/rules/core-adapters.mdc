@@ -1,0 +1,17 @@
+---
+description: Rules for core ports and third-party adapters
+globs: src/core/**/*.ts
+alwaysApply: false
+---
+
+# Core adapters
+
+Each capability folder has:
+
+1. A port file with the TypeScript interface (for example `KeyValueStorage.ts`).
+2. An adapter file that imports the third-party library (for example `mmkvStorage.ts`).
+3. An `index.ts` that exports the port type and the factory. Do not export a live singleton from `index.ts`.
+
+Adapters do not import from `src/features`. Feature rules and coupon or bill logic do not belong here.
+
+To swap a library, add a new adapter that implements the same port and change the factory call in `src/di/container.ts`.

@@ -1,0 +1,13 @@
+---
+description: Theme tokens and NativeWind usage
+globs: "**/*.tsx"
+alwaysApply: false
+---
+
+# UI theme
+
+- Use token-backed NativeWind classes: `bg-brand`, `text-ink`, `px-md`, `rounded-md`, `min-h-touch`, `bg-canvas`.
+- Tokens live in `src/core/theme/tokens.ts`. Do not invent hex colors in components.
+- Put feature-specific class groups in `src/features/<feature>/ui/styles/<feature>.styles.ts`.
+- For native color props (`ActivityIndicator`, status bar), import `colors` from `@/core/theme`.
+- Do not add a new UI library. NativeWind plus common components are the design system.

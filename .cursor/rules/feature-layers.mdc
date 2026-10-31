@@ -1,0 +1,16 @@
+---
+description: Feature domain, data, and UI layer rules
+globs: src/features/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Feature layers
+
+- `domain/`: entities, repository interfaces, use cases, pure rules. No React.
+- `data/`: data sources, DTOs, mappers, repository implementations.
+- `ui/viewmodels/`: presentation hooks (`useXViewModel`). This is the only UI entry to a repository, via `useDependencies()`.
+- `ui/state/`: stores built with `createStore` or `createPersistedStore` from `@/core/state`.
+- `ui/styles/`: named NativeWind class maps for the feature.
+- `index.ts`: public API only. Cross-feature imports use `@/features/<name>` only.
+
+Do not import another feature's `data`, `ui`, or deep paths.

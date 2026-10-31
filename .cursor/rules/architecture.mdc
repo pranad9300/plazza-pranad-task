@@ -1,0 +1,17 @@
+---
+description: Clean Architecture dependency direction for the Plazza app
+alwaysApply: true
+---
+
+# Architecture
+
+Dependency direction:
+
+- `src/app` imports feature screens from `@/features/<name>` only.
+- Feature `ui` imports own `domain`, `@/common`, `@/core/theme`, `@/core/state`, and `useDependencies()`.
+- Feature `data` imports own `domain` and `core` ports.
+- Feature `domain` imports only own domain and `@/utils`.
+- `src/core` is the only layer that imports third-party libraries.
+- `src/di/container.ts` is the only place that constructs adapters and repository implementations.
+
+Features never import `zustand`, `react-native-mmkv`, `expo-location`, `expo-notifications`, or `expo-linking`.

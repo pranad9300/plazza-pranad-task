@@ -1,0 +1,13 @@
+---
+description: Expo Router thin route files
+globs: src/app/**/*.tsx
+alwaysApply: false
+---
+
+# Routing
+
+Route files render a feature screen and navigator options only.
+
+- Import screens from `@/features/<name>`, not from deep feature paths.
+- No repositories, no stores, no Expo device APIs in route files.
+- Root `_layout.tsx` owns `global.css` and `AppProviders`.
