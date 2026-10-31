@@ -8,6 +8,7 @@
 - One coupon at a time, delivery fee, and bill rules are not implemented yet. Their intended home is documented below.
 - `createNoopToastService` is a stand-in. A real toast adapter will replace it when coupon auto-removal needs user feedback.
 - `react-native-mmkv` 4 uses Nitro modules, so the app needs a development build. Expo Go is not enough for MMKV.
+- React is pinned to `19.3.1` (and listed under `expo.install.exclude`) because `react-dom@19.3.1` peers require it. Expo doctor still expects `19.3.0` for SDK 58; the exclude documents that intentional mismatch.
 
 ## Project Architecture
 
