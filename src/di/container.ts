@@ -9,7 +9,7 @@ import { createExpoNotificationService } from '@/core/notifications';
 import type { SettingsLinker } from '@/core/linking';
 import { createExpoSettingsLinker } from '@/core/linking';
 import type { ToastService } from '@/core/toast';
-import { createNoopToastService } from '@/core/toast';
+import { createAndroidToastService } from '@/core/toast';
 import type { CatalogRepository } from '@/features/catalog';
 import { CatalogRepositoryImpl } from '@/features/catalog/data/repositories/CatalogRepositoryImpl';
 import { createLocalCatalogDataSource } from '@/features/catalog/data/sources/LocalCatalogDataSource';
@@ -34,7 +34,7 @@ export function createAppDependencies(): AppDependencies {
     location: createExpoLocationService(),
     notifications: createExpoNotificationService(),
     settingsLinker: createExpoSettingsLinker(),
-    toast: createNoopToastService(),
+    toast: createAndroidToastService(),
     catalogRepository: new CatalogRepositoryImpl(catalogSource),
   };
 }
