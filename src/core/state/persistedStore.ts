@@ -19,12 +19,23 @@ export function createPersistedStore<T extends object>(
   name: string,
   storage: KeyValueStorage,
   initializer: StoreInit<T>,
+  options?: {
+    version?: number;
+    partialize?: (state: T) => Partial<T>;
+  },
 ): AppStore<T> {
   const persistedInitializer = persist(
     ((set, get) => initializer(set, get)) as StateCreator<T, [], [['zustand/persist', T]]>,
     {
       name,
+      version: options?.version ?? 1,
       storage: createJSONStorage(() => toStateStorage(storage)),
+      partialize: options?.partialize,
+      onRehydrateStorage: () => (_state, error) => {
+        if (error) {
+          // Corrupt persistence: leave defaults from initializer.
+        }
+      },
     },
   );
 

@@ -1,3 +1,3 @@
 export const cartStyles = {
-  title: 'text-ink',
+  title: 'mb-md',
 } as const;
