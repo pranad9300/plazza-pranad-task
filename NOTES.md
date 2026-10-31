@@ -114,24 +114,47 @@ Automated tests (jest-expo) cover at minimum:
 
 ## How I Used AI
 
-- Project setup and feature design were driven from an explicit brainstorm → approved spec → implementation plan (not blind generate-and-pray).
-- Library APIs checked against installed Expo SDK 58 types.
-- Coupon edge cases (empty cart SAVE10, FREEDEL when fee already 0, discount clamp, FIRST100 timing) were decided in the design doc before coding.
-- Features landed as separate commits (permissions, search, cart/bill, coupon rules, coupon UI).
-- Rejected approaches: coupon `switch` inside cart bill, deep cross-feature imports, Expo Go for MMKV.
+Treated the assistant as a senior pair with an explicit workflow, not as an unbounded code generator.
+
+### Cursor skills (professional workflow)
+
+| Skill | Role in this project |
+| --- | --- |
+| **brainstorming** | Hard gate before code: clarifying questions, 2–3 approaches, sectioned design approval, then written spec under `docs/superpowers/specs/`. |
+| **writing-plans** | Bite-sized implementation plan with file paths, interfaces, and verification commands (`docs/superpowers/plans/`). |
+| **executing-plans** | Task-by-task execution with lint/tsc checkpoints and one commit per task. |
+| **ponytail-senior-dev** | YAGNI + reuse ladder: extract `QtyStepper` once, debounce with `setTimeout` (no new deps), keep coupon Strategy/Registry, avoid circular cart↔coupons barrels. |
+| **caveman** | Terse review/communication mode for fast decisions without losing technical precision. |
+
+Also followed repo **AGENTS.md** (Expo SDK versioned docs, Expo Router, composition-root DI, NativeWind tokens) rather than training-data guesses for Expo APIs.
+
+### What AI did / did not do
+
+- Drove project setup and features from brainstorm → approved spec → plan → commits (not blind generate-and-pray).
+- Library APIs checked against installed Expo SDK 58 / project types.
+- Coupon edge cases (empty cart SAVE10, FREEDEL when fee already 0, discount clamp, FIRST100 timing) decided in the design doc before coding.
+- UX polish (Home qty, 1s search debounce, Blinkit-style coupon strip + `/coupons`) designed and planned the same way.
+- Rejected approaches: coupon `switch` inside cart bill, deep cross-feature imports that create cycles, Expo Go for MMKV.
 
 ## Build / run
+
+Quick start and install instructions: **[README.md](./README.md)**.
 
 ```bash
 npx expo lint
 npx tsc --noEmit
 npm test
-npx eas-cli@latest build -p android --profile preview
+npx expo run:android
+# release APK (local):
+cd android && ./gradlew assembleRelease
+# copy to dist/plazza-release.apk
 ```
 
-Needs an EAS project (`eas init`) and Android credentials the first time. Profile `preview` outputs an installable APK. MMKV requires a native build (preview or development client), not Expo Go.
+Optional EAS (`eas login` + credentials): `npx eas-cli@latest build -p android --profile preview`. MMKV requires a native build, not Expo Go.
 
 Design references:
 
 - `docs/superpowers/specs/2026-10-31-assignment-features-design.md`
 - `docs/superpowers/plans/2026-10-31-assignment-features.md`
+- `docs/superpowers/specs/2026-10-31-ux-polish-design.md`
+- `docs/superpowers/plans/2026-10-31-ux-polish.md`
