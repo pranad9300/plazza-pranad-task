@@ -15,6 +15,8 @@ import { CatalogRepositoryImpl } from '@/features/catalog/data/repositories/Cata
 import { createLocalCatalogDataSource } from '@/features/catalog/data/sources/LocalCatalogDataSource';
 import type { RecentSearchesRepository } from '@/features/search/domain/repositories/RecentSearchesRepository';
 import { RecentSearchesRepositoryImpl } from '@/features/search/data/repositories/RecentSearchesRepositoryImpl';
+import type { UsedCouponsRepository } from '@/features/coupons';
+import { UsedCouponsRepositoryImpl } from '@/features/coupons/data/repositories/UsedCouponsRepositoryImpl';
 
 export type AppDependencies = {
   storage: KeyValueStorage;
@@ -25,6 +27,7 @@ export type AppDependencies = {
   toast: ToastService;
   catalogRepository: CatalogRepository;
   recentSearchesRepository: RecentSearchesRepository;
+  usedCouponsRepository: UsedCouponsRepository;
 };
 
 export function createAppDependencies(): AppDependencies {
@@ -40,5 +43,6 @@ export function createAppDependencies(): AppDependencies {
     toast: createAndroidToastService(),
     catalogRepository: new CatalogRepositoryImpl(catalogSource),
     recentSearchesRepository: new RecentSearchesRepositoryImpl(storage),
+    usedCouponsRepository: new UsedCouponsRepositoryImpl(storage),
   };
 }
