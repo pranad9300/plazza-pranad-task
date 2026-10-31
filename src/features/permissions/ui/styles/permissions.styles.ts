@@ -1,3 +1,4 @@
 export const permissionStyles = {
-  title: 'text-ink',
+  header: 'gap-xs',
+  delivery: 'text-ink',
 } as const;
