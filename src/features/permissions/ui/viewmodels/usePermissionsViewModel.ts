@@ -8,12 +8,21 @@ function formatCoords(coords: DeliveryCoords): string {
   return `${coords.latitude.toFixed(4)},${coords.longitude.toFixed(4)}`;
 }
 
+function needsAction(state: PermissionState): boolean {
+  return state === 'undetermined' || state === 'denied' || state === 'blocked';
+}
+
+function canRequestAgain(state: PermissionState): boolean {
+  return state === 'undetermined' || state === 'denied';
+}
+
 export function usePermissionsViewModel() {
   const { permissions, location, settingsLinker } = useDependencies();
   const [locationState, setLocationState] = useState<PermissionState>('undetermined');
   const [notificationState, setNotificationState] = useState<PermissionState>('undetermined');
   const [coordsLabel, setCoordsLabel] = useState<string | null>(null);
   const requestingRef = useRef(false);
+  const didAskOnLaunchRef = useRef(false);
 
   const loadCoords = useCallback(async () => {
     try {
@@ -46,12 +55,15 @@ export function usePermissionsViewModel() {
     try {
       const currentLoc = await permissions.getLocation();
       const currentNotif = await permissions.getNotifications();
-      const nextLoc =
-        currentLoc === 'undetermined' ? await permissions.requestLocation() : currentLoc;
-      const nextNotif =
-        currentNotif === 'undetermined'
-          ? await permissions.requestNotifications()
-          : currentNotif;
+
+      // Brief: ask again while denied; only blocked must go to Settings.
+      const nextLoc = canRequestAgain(currentLoc)
+        ? await permissions.requestLocation()
+        : currentLoc;
+      const nextNotif = canRequestAgain(currentNotif)
+        ? await permissions.requestNotifications()
+        : currentNotif;
+
       setLocationState(nextLoc);
       setNotificationState(nextNotif);
       if (nextLoc === 'granted') {
@@ -71,7 +83,10 @@ export function usePermissionsViewModel() {
   useEffect(() => {
     void (async () => {
       await refresh();
-      await requestAll();
+      if (!didAskOnLaunchRef.current) {
+        didAskOnLaunchRef.current = true;
+        await requestAll();
+      }
     })();
   }, [refresh, requestAll]);
 
@@ -85,23 +100,25 @@ export function usePermissionsViewModel() {
     return () => sub.remove();
   }, [refresh]);
 
-  const needsRationale =
-    locationState === 'denied' ||
-    locationState === 'blocked' ||
-    notificationState === 'denied' ||
-    notificationState === 'blocked';
-
+  const locationNeedsAction = needsAction(locationState);
+  const notificationNeedsAction = needsAction(notificationState);
+  const needsRationale = locationNeedsAction || notificationNeedsAction;
   const isBlocked = locationState === 'blocked' || notificationState === 'blocked';
 
   return {
     locationState,
     notificationState,
     coordsLabel,
-    deliveryLine: coordsLabel
-      ? `Delivering to: ${coordsLabel}`
-      : 'Delivering to: Location unavailable',
+    deliveryLine:
+      locationState !== 'granted'
+        ? 'Delivering to: Location unavailable'
+        : coordsLabel
+          ? `Delivering to: ${coordsLabel}`
+          : 'Delivering to: Location unavailable',
     needsRationale,
     isBlocked,
+    locationNeedsAction,
+    notificationNeedsAction,
     requestAll,
     openSettings,
     refresh,

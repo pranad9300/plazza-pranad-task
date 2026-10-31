@@ -28,6 +28,8 @@ export function SearchScreen() {
           {permissionsVm.needsRationale ? (
             <PermissionRationale
               isBlocked={permissionsVm.isBlocked}
+              locationNeedsAction={permissionsVm.locationNeedsAction}
+              notificationNeedsAction={permissionsVm.notificationNeedsAction}
               onRequest={() => {
                 void permissionsVm.requestAll();
               }}
