@@ -7,6 +7,7 @@ export function CartScreen() {
     <Screen>
       <View className={cartStyles.title}>
         <AppText variant="title">Cart</AppText>
+        <AppText variant="muted">Cart UI lands in the next feature commit.</AppText>
       </View>
     </Screen>
   );

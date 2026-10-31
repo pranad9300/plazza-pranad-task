@@ -13,6 +13,8 @@ import { createAndroidToastService } from '@/core/toast';
 import type { CatalogRepository } from '@/features/catalog';
 import { CatalogRepositoryImpl } from '@/features/catalog/data/repositories/CatalogRepositoryImpl';
 import { createLocalCatalogDataSource } from '@/features/catalog/data/sources/LocalCatalogDataSource';
+import type { RecentSearchesRepository } from '@/features/search/domain/repositories/RecentSearchesRepository';
+import { RecentSearchesRepositoryImpl } from '@/features/search/data/repositories/RecentSearchesRepositoryImpl';
 
 export type AppDependencies = {
   storage: KeyValueStorage;
@@ -22,6 +24,7 @@ export type AppDependencies = {
   settingsLinker: SettingsLinker;
   toast: ToastService;
   catalogRepository: CatalogRepository;
+  recentSearchesRepository: RecentSearchesRepository;
 };
 
 export function createAppDependencies(): AppDependencies {
@@ -36,5 +39,6 @@ export function createAppDependencies(): AppDependencies {
     settingsLinker: createExpoSettingsLinker(),
     toast: createAndroidToastService(),
     catalogRepository: new CatalogRepositoryImpl(catalogSource),
+    recentSearchesRepository: new RecentSearchesRepositoryImpl(storage),
   };
 }
