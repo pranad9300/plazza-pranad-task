@@ -40,6 +40,14 @@
         {
           "color": "#FF2E8B"
         }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "minSdkVersion": 33
+          }
+        }
       ]
     ]
   }

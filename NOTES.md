@@ -2,7 +2,7 @@
 
 ## Assumptions
 
-- Target platform is **Android 13+ (API 33)** only. `android.minSdkVersion` is **33** in `app.json`. iOS is not required.
+- Target platform is **Android 13+ (API 33)** only. Enforced via `expo-build-properties` (`android.minSdkVersion: 33`). Confirmed in Gradle as `minSdk: 33`. iOS is not required.
 - `catalog.json` was generated from the brief table as `{ "medicines": [...] }` because the original attachment was not in the repo.
 - Location is only for a generic `Delivering to: lat,lng` string. No reverse geocoding.
 - UI scope is brief-first with a Plazza skin (pink/purple). Marketing chrome from screenshots (Rewards, category chips, voice mic, doctor promo, fake street address) is **out of scope**.
