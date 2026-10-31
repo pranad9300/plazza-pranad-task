@@ -12,6 +12,7 @@
     },
     "android": {
       "package": "com.plazza.scaffold",
+      "minSdkVersion": 33,
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",

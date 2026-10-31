@@ -20,7 +20,10 @@ export function MedicineResultRow({
         <AppText variant="muted">{medicine.salt}</AppText>
         <AppText variant="body">{formatRupees(medicine.price)}</AppText>
       </View>
-      <Button label="Add" onPress={onAdd} />
+      <Button
+        label="Add"
+        onPress={onAdd}
+      />
     </View>
   );
 }
