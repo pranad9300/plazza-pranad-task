@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Medicine } from '@/features/catalog';
 import { useCartStore } from '@/features/cart';
 import { useDependencies } from '@/di/DependenciesProvider';
@@ -6,14 +6,23 @@ import { searchMedicines } from '../../domain/usecases/searchMedicines';
 
 export type SearchStatus = 'idle' | 'loading' | 'results' | 'noResults';
 
+const SEARCH_DEBOUNCE_MS = 1000;
+
 export function useSearchViewModel() {
   const { catalogRepository, recentSearchesRepository, toast } = useDependencies();
+  const lines = useCartStore((state) => state.lines);
   const addItem = useCartStore((state) => state.addItem);
-  const [query, setQuery] = useState('');
+  const incrementStore = useCartStore((state) => state.increment);
+  const decrementStore = useCartStore((state) => state.decrement);
+
+  const [query, setQueryState] = useState('');
   const [status, setStatus] = useState<SearchStatus>('idle');
   const [results, setResults] = useState<Medicine[]>([]);
   const [recents, setRecents] = useState<string[]>([]);
   const [catalog, setCatalog] = useState<Medicine[]>([]);
+
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const skipDebounceRef = useRef(false);
 
   useEffect(() => {
     void (async () => {
@@ -26,10 +35,28 @@ export function useSearchViewModel() {
     })();
   }, [catalogRepository, recentSearchesRepository]);
 
-  const runSearch = useCallback(
+  const clearTimer = useCallback(() => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  }, []);
+
+  const setQuery = useCallback(
+    (value: string) => {
+      setQueryState(value);
+      if (!value.trim()) {
+        clearTimer();
+        setStatus('idle');
+        setResults([]);
+      }
+    },
+    [clearTimer],
+  );
+
+  const executeSearch = useCallback(
     async (rawQuery: string) => {
       const trimmed = rawQuery.trim();
-      setQuery(rawQuery);
       if (!trimmed) {
         setStatus('idle');
         setResults([]);
@@ -50,6 +77,45 @@ export function useSearchViewModel() {
     [catalog, catalogRepository, recentSearchesRepository],
   );
 
+  useEffect(() => {
+    clearTimer();
+
+    const trimmed = query.trim();
+    if (!trimmed) {
+      return;
+    }
+
+    if (skipDebounceRef.current) {
+      skipDebounceRef.current = false;
+      void executeSearch(query);
+      return;
+    }
+
+    timerRef.current = setTimeout(() => {
+      timerRef.current = null;
+      void executeSearch(query);
+    }, SEARCH_DEBOUNCE_MS);
+
+    return () => {
+      clearTimer();
+    };
+  }, [query, executeSearch, clearTimer]);
+
+  const submitSearch = useCallback(() => {
+    clearTimer();
+    void executeSearch(query);
+  }, [clearTimer, executeSearch, query]);
+
+  const selectRecent = useCallback((value: string) => {
+    skipDebounceRef.current = true;
+    setQueryState(value);
+  }, []);
+
+  const qtyFor = useCallback(
+    (medicineId: string) => lines.find((line) => line.medicineId === medicineId)?.qty ?? 0,
+    [lines],
+  );
+
   const addToCart = useCallback(
     (medicine: Medicine) => {
       const result = addItem(medicine);
@@ -62,16 +128,37 @@ export function useSearchViewModel() {
     [addItem, toast],
   );
 
+  const increment = useCallback(
+    (medicineId: string) => {
+      const result = incrementStore(medicineId);
+      if (!result.ok) {
+        toast.show(result.reason);
+      }
+    },
+    [incrementStore, toast],
+  );
+
+  const decrement = useCallback(
+    (medicineId: string) => {
+      const result = decrementStore(medicineId);
+      if (!result.ok) {
+        toast.show(result.reason);
+      }
+    },
+    [decrementStore, toast],
+  );
+
   return {
     query,
     setQuery,
     status,
     results,
     recents,
-    runSearch,
+    selectRecent,
+    submitSearch,
+    qtyFor,
     addToCart,
-    selectRecent: (value: string) => {
-      void runSearch(value);
-    },
+    increment,
+    decrement,
   };
 }

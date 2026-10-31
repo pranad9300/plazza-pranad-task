@@ -47,9 +47,7 @@ export function SearchScreen() {
           placeholderTextColor={colors.muted}
           value={searchVm.query}
           onChangeText={searchVm.setQuery}
-          onSubmitEditing={() => {
-            void searchVm.runSearch(searchVm.query);
-          }}
+          onSubmitEditing={searchVm.submitSearch}
           returnKeyType="search"
         />
 
@@ -68,7 +66,10 @@ export function SearchScreen() {
                 <MedicineResultRow
                   key={medicine.id}
                   medicine={medicine}
+                  qty={searchVm.qtyFor(medicine.id)}
                   onAdd={() => searchVm.addToCart(medicine)}
+                  onIncrement={() => searchVm.increment(medicine.id)}
+                  onDecrement={() => searchVm.decrement(medicine.id)}
                 />
               ))
             : null}
