@@ -4,11 +4,19 @@ Expo / React Native medicine search, persistent cart, and coupon engine for **An
 
 Deep design notes, architecture rationale, trade-offs, and AI workflow live in **[NOTES.md](./NOTES.md)**.
 
-## Prerequisites
+## Try on a physical Android device (no build commands)
+
+1. Download the installable APK from the latest [GitHub Release](https://github.com/pranad9300/plazza-pranad-task/releases) (asset: `plazza-release.apk`), or use the local copy at `dist/plazza-release.apk` after a release build.
+2. On the phone: allow install from unknown sources / browser if prompted.
+3. Open the APK and install. Launch **Plazza**.
+
+Requires **Android 13+ (API 33)**. No Metro / `expo start` needed for this path.
+
+## Prerequisites (for developers)
 
 - Node.js 20+ (LTS recommended)
 - Android device or emulator with **API 33+**
-- For a native install: Android SDK / able to run `npx expo run:android`
+- For a native install from source: Android SDK / able to run `npx expo run:android`
 
 `react-native-mmkv` needs a **development or release native build**. Expo Go will not work.
 
@@ -38,21 +46,20 @@ npx tsc --noEmit
 npm test
 ```
 
-## Release APK
+## Where is the APK?
 
-Local release build (Gradle via Expo prebuild / existing `android/`):
+| Location | Notes |
+| --- | --- |
+| **GitHub Releases** | Preferred for reviewers — download `plazza-release.apk` from the release page |
+| **`dist/plazza-release.apk`** | Local path after `assembleRelease` (`dist/` is gitignored, not in git) |
+| **Gradle output** | `android/app/build/outputs/apk/release/app-release.apk` |
+
+Rebuild locally:
 
 ```bash
 cd android && ./gradlew assembleRelease
+cp app/build/outputs/apk/release/app-release.apk ../dist/plazza-release.apk
 ```
-
-Copy the output APK to:
-
-```text
-dist/plazza-release.apk
-```
-
-(`dist/` is gitignored; build locally or use your CI artifact store.)
 
 Optional EAS (needs `eas login` + project credentials):
 
