@@ -1,5 +1,5 @@
-import { Pressable, View } from 'react-native';
-import { AppText, Badge, Button } from '@/common/components';
+import { View } from 'react-native';
+import { AppText, Badge, Button, QtyStepper } from '@/common/components';
 import { formatRupees } from '@/utils';
 import type { CartLine } from '../../domain/entities/CartLine';
 
@@ -24,23 +24,12 @@ export function CartLineRow({
         {formatRupees(line.price)} · max {line.maxQty}
       </AppText>
       <View className="flex-row items-center gap-sm">
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={`Decrease ${line.name}`}
-          className="min-h-touch min-w-[44px] items-center justify-center rounded-md bg-surface"
-          onPress={onDecrement}
-        >
-          <AppText variant="title">−</AppText>
-        </Pressable>
-        <AppText variant="body">{line.qty}</AppText>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={`Increase ${line.name}`}
-          className="min-h-touch min-w-[44px] items-center justify-center rounded-md bg-surface"
-          onPress={onIncrement}
-        >
-          <AppText variant="title">+</AppText>
-        </Pressable>
+        <QtyStepper
+          qty={line.qty}
+          accessibilityName={line.name}
+          onIncrement={onIncrement}
+          onDecrement={onDecrement}
+        />
         <View className="flex-1" />
         <Button label="Remove" onPress={onRemove} />
       </View>

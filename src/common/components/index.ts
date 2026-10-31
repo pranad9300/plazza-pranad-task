@@ -4,3 +4,4 @@ export { Button } from './Button';
 export { Badge } from './Badge';
 export { EmptyState } from './EmptyState';
 export { Loader } from './Loader';
+export { QtyStepper } from './QtyStepper';
